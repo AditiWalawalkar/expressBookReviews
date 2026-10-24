@@ -102,3 +102,27 @@ module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
 module.exports.SECRET = SECRET;
+
+regd_users.delete('/auth/review/:isbn', (req, res) => {
+  const isbn = req.params.isbn;
+  const book = books[isbn];
+
+  if (!book) {
+    return res.status(404).json({ message: 'Book not found' });
+  }
+
+  const username = req.user.username;
+
+  if (!Object.prototype.hasOwnProperty.call(book.reviews, username)) {
+    return res.status(404).json({
+      message: 'Review not found for this user'
+    });
+  }
+
+  delete book.reviews[username];
+
+  return res.status(200).json({
+    message: `Review for ISBN ${isbn} deleted`,
+    reviews: book.reviews
+  });
+});
