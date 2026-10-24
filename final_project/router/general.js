@@ -1,3 +1,4 @@
+
 const express = require('express');
 const books = require('./booksdb.js');
 const { isValid, users } = require('./auth_users.js');
@@ -9,15 +10,22 @@ public_users.post('/register', (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ message: 'Username and password are required' });
+    return res.status(400).json({
+      message: 'Username and password are required'
+    });
   }
 
   if (isValid(username)) {
-    return res.status(409).json({ message: 'Username already exists' });
+    return res.status(409).json({
+      message: 'Username already exists'
+    });
   }
 
   users.push({ username, password });
-  return res.status(201).json({ message: 'User successfully registered' });
+
+  return res.status(201).json({
+    message: 'User successfully registered'
+  });
 });
 
 // Get all books
@@ -25,7 +33,7 @@ public_users.get('/', (req, res) => {
   return res.status(200).json(books);
 });
 
-// Get book by ISBN (the dataset uses keys 1 to 10)
+// Get book by ISBN
 public_users.get('/isbn/:isbn', (req, res) => {
   const book = books[req.params.isbn];
 
@@ -36,7 +44,7 @@ public_users.get('/isbn/:isbn', (req, res) => {
   return res.status(200).json(book);
 });
 
-// Search books by author
+// Get books by author
 public_users.get('/author/:author', (req, res) => {
   const author = decodeURIComponent(req.params.author).toLowerCase();
 
@@ -47,7 +55,7 @@ public_users.get('/author/:author', (req, res) => {
   return res.status(200).json(results);
 });
 
-// Search books by title
+// Get books by title
 public_users.get('/title/:title', (req, res) => {
   const title = decodeURIComponent(req.params.title).toLowerCase();
 
@@ -58,7 +66,7 @@ public_users.get('/title/:title', (req, res) => {
   return res.status(200).json(results);
 });
 
-// Get reviews for a book
+// Get reviews by ISBN
 public_users.get('/review/:isbn', (req, res) => {
   const book = books[req.params.isbn];
 
